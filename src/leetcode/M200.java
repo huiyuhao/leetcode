@@ -2,6 +2,7 @@ package leetcode;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class M200 {
 	/**
@@ -137,10 +138,59 @@ public class M200 {
 		helper(grid, i, j + 1);
 	}
 
-
+	/**
+	 * 用栈实现DFS,代码和用队列并没有什么太大差别
+	 * 
+	 * @param grid
+	 * @return
+	 */
+	public int numIslands4(char[][] grid) {
+		int row = grid.length;
+		if (row == 0)
+			return 0;
+		int col = grid[0].length;
+		int lands = 0;
+		Stack<Integer[]> stack = new Stack<>();
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				if (grid[i][j] == '1') {
+					lands++;
+					grid[i][j] = '0';
+					stack.push(new Integer[] { i, j });
+					while (!stack.isEmpty()) {
+						Integer[] cur = stack.pop();
+						int x = cur[0];
+						int y = cur[1];
+						// 向上
+						if (y > 0 && grid[x][y - 1] == '1') {
+							grid[x][y - 1] = 0;
+							stack.push(new Integer[] { x, y - 1 });
+						}
+						// 向下
+						if (y < col - 1 && grid[x][y + 1] == '1') {
+							grid[x][y + 1] = 0;
+							stack.push(new Integer[] { x, y + 1 });
+						}
+						// 向左
+						if (x > 0 && grid[x - 1][y] == '1') {
+							grid[x - 1][y] = 0;
+							stack.push(new Integer[] { x - 1, y });
+						}
+						// 向右
+						if (x < row - 1 && grid[x + 1][y] == '1') {
+							grid[x + 1][y] = 0;
+							stack.push(new Integer[] { x + 1, y });
+						}
+					}
+				}
+			}
+		}
+		return lands;
+	}
 
 	/**
 	 * 并查集，真尼玛晕，这里面parent[]存的是每个节点的父节点，rank[]存的是父节点的深度。
+	 * 
 	 * @author yanghao
 	 *
 	 */
@@ -192,6 +242,7 @@ public class M200 {
 			return count;
 		}
 	}
+
 	public int numIslands5(char[][] grid) {
 		if (grid == null || grid.length == 0) {
 			return 0;
