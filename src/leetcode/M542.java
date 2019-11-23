@@ -19,7 +19,7 @@ public class M542 {
 				if (matrix[i][j] == 0)
 					queue.add(new Integer[] { i, j });
 				if (matrix[i][j] == 1)
-					matrix[i][j] = 300;
+					matrix[i][j] = 200;
 			}
 		}
 		while (!queue.isEmpty()) {
@@ -45,5 +45,40 @@ public class M542 {
 			}
 		}
 		return matrix;
+	}
+
+	/**
+	 * ¶¯Ì¬¹æ»®
+	 * 
+	 * @param matrix
+	 * @return
+	 */
+	public int[][] updateMatrix2(int[][] matrix) {
+		int row = matrix.length;
+		if (row == 0)
+			return new int[0][0];
+		int col = matrix[0].length;
+		int[][] dist = new int[row][col];
+		for (int i = 0; i < row; i++)
+			for (int j = 0; j < col; j++)
+				dist[i][j] = 200;
+		for (int i = 0; i < row; i++)
+			for (int j = 0; j < col; j++)
+				if (matrix[i][j] == 0)
+					dist[i][j] = 0;
+				else {
+					if (i > 0)
+						dist[i][j] = Math.min(dist[i][j], dist[i - 1][j] + 1);
+					if (j > 0)
+						dist[i][j] = Math.min(dist[i][j], dist[i][j - 1] + 1);
+				}
+		for (int i = row - 1; i >= 0; i--)
+			for (int j = col - 1; j >= 0; j--) {
+				if (i < row - 1)
+					dist[i][j] = Math.min(dist[i][j], dist[i + 1][j] + 1);
+				if (j < col - 1)
+					dist[i][j] = Math.min(dist[i][j], dist[i][j + 1] + 1);
+			}
+		return dist;
 	}
 }
