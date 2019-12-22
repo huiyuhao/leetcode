@@ -74,49 +74,28 @@ public class Week165 {
 		return res;
 	}
 
+	/**
+	 * 看了题解，真的好
+	 * @param matrix
+	 * @return
+	 */
 	public int countSquares(int[][] matrix) {
-		int count = 0;
 		int row = matrix.length;
 		int col = matrix[0].length;
-		boolean[][] visited = new boolean[row][col];
-		for (int i = 0; i < row; i++)
-			for (int j = 0; j < col; j++)
-				if (matrix[i][j] == 1 && !visited[i][j])
-					count += count(matrix, visited, i, j);
-		return count;
-	}
-
-	public int count(int[][] matrix, boolean[][] visited, int i, int j) {
-		int len = Math.min(matrix.length - i - 1, matrix[0].length - j - 1);
-		int count = 0;
-		int k = 0;
-		while (k <= len) {
-			boolean flag = true;
-			for (int r = i; r < i + k; r++)
-				if (matrix[r][j + k] != 1) {
-					flag = false;
-					break;
-				}
-			if (!flag)
-				break;
-			for (int c = j; c < j + k; c++)
-				if (matrix[i + k][c] != 1) {
-					flag = false;
-					break;
-				}
-			if (!flag)
-				break;
-			if (matrix[i + k][j + k] != 1)
-				break;
-			k++;
+		int sum = 0;
+		int[][] temp = new int[row][col];
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < col; j++) {
+				if (i == 0 || j == 0)
+					temp[i][j] = matrix[i][j];
+				else if (matrix[i][j] == 0)
+					temp[i][j] = 0;
+				else
+					temp[i][j] = Math.min(Math.min(temp[i - 1][j], temp[i][j - 1]), temp[i - 1][j - 1]) + 1;
+				sum += temp[i][j];
+			}
 		}
-		// s <= k + 1是正方形内所有正方形的数量（包括自身和只占一格的最小正方形）
-		for (int s = 1; s <= k + 1; s++)
-			count += s * s;
-		for (int r = i; r <= i + k; r++)
-			for (int c = 0; c <= j + k; c++)
-				visited[r][c] = true;
-		return count;
+		return sum;
 	}
 
 	public static void main(String[] args) {
